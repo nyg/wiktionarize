@@ -16,7 +16,7 @@ document.getElementById('parse').onclick = function () {
 }
 
 function checkExistence(lang, word) {
-    new MediaWikiJS('http://' + lang + '.wiktionary.org', {
+    new MediaWikiJS('https://' + lang + '.wiktionary.org', {
         action: 'opensearch',
         search: word,
         profile: 'fuzzy',
