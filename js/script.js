@@ -1,35 +1,51 @@
-document.getElementById('parse').onclick = function () {
+document.getElementById('parse').onclick = () => {
 
-    var words = Array.from(new Set(document.getElementById('text').value.split(' '))),
-        languages = document.getElementById('languages').value.split(/[, ]+/)
-        results = document.getElementById('results')
+    var text = _id('text').value.replace(/["']/g, '').trim(),
+        words = Array.from(new Set(text.split(/[ \n]/g))),
+        languages = _id('languages').value.replace(/ /g, '').split(',')
+        results = _id('results')
 
-    words.forEach(function (word) {
+    results.innerHTML = ''
 
-        results.appendChild(_span(word, word + ': '))
+    words.forEach(word => {
+
+        results.appendChild(_span(word, ''))
         results.appendChild(_br());
 
-        languages.forEach(function (lang) {
+        languages.forEach(lang => {
             checkExistence(lang, word)
         })
     })
 }
 
+var apiOptions = {
+    action: 'opensearch',
+    profile: 'normal',
+    limit: 1
+}
+
 function checkExistence(lang, word) {
-    new MediaWikiJS('https://' + lang + '.wiktionary.org', {
-        action: 'opensearch',
-        search: word,
-        profile: 'fuzzy',
-        limit: 1
-    }, function (data) {
-        var links = data[3]
-        var a = _a(lang, data[3])
-        if (links.length == 0) {
-            a.style.color = 'red'
+
+    apiOptions.search = word
+    var url = 'https://' + lang + '.wiktionary.org'
+
+    new MediaWikiJS(url, apiOptions, data => {
+
+        if (data[3].length == 1) { // there is a result
+            _id(word).appendChild(
+                _span(lang + '-' + word,
+                    _a(`${data[1][0]} (${lang})`, data[3][0])))
         }
-        a.style.marginRight = '5px'
-        document.getElementById(word).appendChild(_span(lang + '-' + word, a))
+        else {
+            var a = _a(`${word} (${lang})`, `${url}/wiki/${word}`)
+            a.style.color = 'red'
+            _id(word).appendChild(a)
+        }
     })
+}
+
+function _id(id) {
+    return document.getElementById(id)
 }
 
 function _span(id, content) {
@@ -52,5 +68,6 @@ function _a(title, url) {
     var a = document.createElement('a')
     a.setAttribute('href', url)
     a.textContent = title
+    a.style.marginRight = '15px'
     return a
 }
