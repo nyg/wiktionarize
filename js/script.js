@@ -1,46 +1,30 @@
+var punctuation = ',.;:!·"«»\''
+var begin = new RegExp('^[' + punctuation + ']', 'g')
+var end = new RegExp('[' + punctuation.slice(0, -1) + ']$', 'g') // let's not remove ' at the end of words
+
 document.getElementById('parse').onclick = () => {
 
-    var text = _id('text').value.replace(/["']/g, '').trim(),
-        words = Array.from(new Set(text.split(/[ \n]/g))),
-        languages = _id('languages').value.replace(/ /g, '').split(',')
-        results = _id('results')
+    var text = _id('text').value
+    var results = _id('results')
 
-    results.innerHTML = ''
+    results.textContent = ''
 
-    words.forEach(word => {
+    var words = text.toLowerCase().replace(/[^α-ωά-ώ]/g, ' ').split(/\s/g)
+    /*.map(e => {
+        return e.replace(begin, '').replace(end, '')
+    })*/
 
-        results.appendChild(_span(word, ''))
-        results.appendChild(_br());
+    console.log('Initial length: ' + words.length)
 
-        languages.forEach(lang => {
-            checkExistence(lang, word)
-        })
-    })
-}
+    var set = new Set(words)
 
-var apiOptions = {
-    action: 'opensearch',
-    profile: 'normal',
-    limit: 1
-}
+    console.log(set.size)
 
-function checkExistence(lang, word) {
-
-    apiOptions.search = word
-    var url = 'https://' + lang + '.wiktionary.org'
-
-    new MediaWikiJS(url, apiOptions, data => {
-
-        if (data[3].length == 1) { // there is a result
-            _id(word).appendChild(
-                _span(lang + '-' + word,
-                    _a(`${data[1][0]} (${lang})`, data[3][0])))
-        }
-        else {
-            var a = _a(`${word} (${lang})`, `${url}/wiki/${word}`)
-            a.style.color = 'red'
-            _id(word).appendChild(a)
-        }
+    Array
+    .from(set)
+    .sort((a, b) => a.localeCompare(b))
+    .forEach(word => {
+        if (word.length > 0) results.appendChild(_span('[[' + word + ']] '))
     })
 }
 
@@ -48,15 +32,9 @@ function _id(id) {
     return document.getElementById(id)
 }
 
-function _span(id, content) {
+function _span(content) {
     var span = document.createElement('span')
-    span.setAttribute('id', id)
-    if (typeof content === 'string') {
-        span.textContent = content
-    }
-    else if (typeof content === 'object') {
-        span.appendChild(content)
-    }
+    span.textContent = content
     return span
 }
 

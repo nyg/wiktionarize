@@ -3,14 +3,21 @@
     <head>
         <meta charset="utf-8" />
         <title>Wiktionarize</title>
+        <style media="screen">
+            * {
+                font-family: 'Times';
+                font-size: 18px;
+            }
+            textarea {
+                width: 90%;
+            }
+        </style>
     </head>
     <body>
-        <input type="text" id="languages" value="en, el, fr"><br>
-        <textarea id="text" rows="8" cols="80">Παράλληλα, τόνισε, ότι η Επιτροπή παρακολουθεί στενά την κατάσταση και κάνει ό,τι μπορεί για να στηρίξει τις ελληνικές αρχές. Σημείωσε δε, ότι η Επιτροπή έχει ήδη επισημάνει την ανάγκη δημιουργίας πρόσθετων χώρων υποδοχής για τους πρόσφυγες στα νησιά και έχει ενημερώσει τις τοπικές και εθνικές αρχές πως είναι έτοιμη να τα χρηματοδοτήσει.</textarea><br>
+        <textarea id="text" rows="20">Παράλληλα, τόνισε, ότι κατ' η "Επιτροπή" παρακολουθεί 123 και· στενά; την κατάσταση και κάνει ό,τι μπορεί για να στηρίξει! τις ελληνικές αρχές. Σημείωσε δε, ότι η Επιτροπή έχει ήδη επισημάνει την ανάγκη δημιουργίας πρόσθετων χώρων υποδοχής για τους πρόσφυγες στα νησιά και έχει ενημερώσει τις τοπικές και εθνικές αρχές πως είναι έτοιμη να τα χρηματοδοτήσει.</textarea><br>
         <input type="button" value="Parse" id="parse">
         <div id='results'></div>
 
-        <script src="https://cdn.rawgit.com/brettz9/mediawiki-js/355fee14/MediawikiJS.js"></script>
         <script src="js/script.js"></script>
     </body>
 </html>
